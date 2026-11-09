@@ -87,16 +87,52 @@ function subscribeToNothing() {
   return () => {};
 }
 
+// Voice quality varies a lot between browsers. Rank what the device offers and take the most natural one:
+// neural/premium voices (Edge "Natural", Chrome "Google", Apple "Premium"/"Enhanced") beat the basic built-ins.
+const noveltyVoices = /\b(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|fred|junior|ralph|kathy|grandma|grandpa|rocko|eddy|flo|reed|sandy|shelley)\b/i;
+
+function voiceScore(voice: SpeechSynthesisVoice) {
+  const name = voice.name;
+  if (noveltyVoices.test(name)) return -1;
+  let score = 0;
+  if (/natural|neural|premium|enhanced|siri/i.test(name)) score += 100;
+  if (/^google us english/i.test(name)) score += 80;
+  if (/\b(ava|samantha|allison|susan|zoe|nicky|evan|nathan|aaron|joelle|noelle|tom)\b/i.test(name)) score += 20;
+  if (!voice.localService) score += 10; // online voices are usually higher quality
+  if (voice.default) score += 1;
+  return score;
+}
+
+function bestAmericanVoice(voices: SpeechSynthesisVoice[]) {
+  return voices
+    .filter((voice) => voice.lang.replace("_", "-") === "en-US")
+    .map((voice) => ({ voice, score: voiceScore(voice) }))
+    .filter(({ score }) => score >= 0)
+    .sort((left, right) => right.score - left.score)[0]?.voice ?? null;
+}
+
+// Browsers fill the voice list asynchronously; wait briefly so the first word isn't spoken by the fallback voice.
+function loadVoices(synth: SpeechSynthesis) {
+  const voices = synth.getVoices();
+  if (voices.length) return Promise.resolve(voices);
+  return new Promise<SpeechSynthesisVoice[]>((resolve) => {
+    const done = () => resolve(synth.getVoices());
+    synth.addEventListener("voiceschanged", done, { once: true });
+    setTimeout(done, 600);
+  });
+}
+
 function speakAmerican(text: string) {
   const synth = window.speechSynthesis;
   synth.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.9;
-  // Prefer a real en-US voice; the list can be empty until the browser has loaded its voices.
-  const voices = synth.getVoices().filter((voice) => voice.lang.replace("_", "-") === "en-US");
-  utterance.voice = voices.find((voice) => voice.localService) ?? voices[0] ?? null;
-  synth.speak(utterance);
+  void loadVoices(synth).then((voices) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.voice = bestAmericanVoice(voices);
+    // A touch slower than normal speech, so a learner can hear each sound.
+    utterance.rate = 0.88;
+    synth.speak(utterance);
+  });
 }
 
 type OxfordWordRecord = { word: string; levels: string[]; senses: { part: string; level: string }[]; meaning: string; supplemental?: boolean };
