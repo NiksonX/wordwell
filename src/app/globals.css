@@ -83,7 +83,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 
 .study-area { min-width: 0; display: flex; flex-direction: column; align-items: center; }
 .study-heading { width: min(100%, 590px); display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin: 6px 0 31px; }
-.study-heading h2 { margin: 0; font-family: var(--font-display); font-size: 2.25rem; line-height: 1.1; font-weight: 500; letter-spacing: 0; }
+.study-heading h2 { margin: 0; font-family: var(--font-display); font-size: 1.75rem; line-height: 1.1; font-weight: 500; letter-spacing: 0; }
 .study-heading h2 em { color: var(--green); font-weight: 500; }
 .progress-wrap { min-width: 92px; padding-bottom: 4px; color: #5f6b62; text-align: right; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
 .progress-track { height: 3px; margin-top: 9px; border-radius: 4px; background: #e2e5df; overflow: hidden; }
@@ -106,7 +106,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .language-toggle button:disabled { color: #a5ada6; cursor: not-allowed; }
 .card-topline, .card-bottomline { display: flex; align-items: center; justify-content: space-between; color: #56635a; font-size: 0.6875rem; font-weight: 700; letter-spacing: 1px; }
 .card-topline .level-tag { letter-spacing: 0; }
-.word-display { margin: auto 0 10px; font-family: var(--font-display); font-size: clamp(3.5rem, 8vw, 4.3rem); font-weight: 500; line-height: 1; letter-spacing: 0; overflow-wrap: break-word; }
+.word-display { margin: auto 0 10px; font-family: var(--font-display); font-size: clamp(3.5rem, 8vw, 3.7rem); font-weight: 500; line-height: 1; letter-spacing: 0; overflow-wrap: break-word; }
 .word-note { display: block; margin-top: 8px; color: #637067; font-family: var(--font-body); font-size: 1rem; font-weight: 500; line-height: 1.3; }
 .word-meta { display: flex; align-items: center; gap: 8px; color: #59665d; font-size: 0.8125rem; }
 .word-meta i { width: 5px; height: 5px; border-radius: 50%; background: var(--coral); }
@@ -134,11 +134,11 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 @container card (max-height: 30rem) {
   .card-back:has(.example-block) .card-bottomline { display: none; }
   .card-back:has(.example-block) .meaning-label { margin-top: 4px; line-height: 1.05; }
-  .card-back:has(.example-block) .meaning-text { margin-top: 6px; margin-bottom: 8px; line-height: 1.2; }
+  .card-back:has(.example-block) .meaning-text { margin-top: 56px; margin-bottom: 8px; line-height: 1.2; }
 }
 /* Short cards only tighten spacing; text keeps its normal size. */
 @container card (max-height: 25rem) {
-  .card-back:has(.example-block) { padding-top: 24px; padding-bottom: 24px; }
+  .card-back:has(.example-block) { padding-top: 24px; }
   .card-back:has(.example-block) .example-block { gap: 5px; padding: 11px 14px; line-height: 1.35; }
 }
 .card-empty { flex: 1; display: grid; place-content: center; justify-items: center; gap: 14px; color: #738076; }

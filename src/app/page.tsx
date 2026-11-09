@@ -530,7 +530,7 @@ export default function Home() {
           <div className="study-heading">
             <div>
               <p className="eyebrow">A MOMENT FOR YOUR VOCABULARY</p>
-              <h2>Small words. <em>Big worlds.</em></h2>
+              <h2>Small words. <em>Big world.</em></h2>
             </div>
             <div className="progress-wrap">
               <span>{deck.length ? `${String(currentIndex + 1).padStart(2, "0")} / ${String(deck.length).padStart(2, "0")}` : "00 / 00"}</span>
@@ -553,7 +553,7 @@ export default function Home() {
                 </button>
                 <button className="card-face card-back" onClick={() => flipCard(false)} aria-label={`Hide meaning of ${current.word}`}>
                   <span className="card-topline"><span>THE MEANING</span><span className={`level-tag level-${current.levels[0].toLowerCase()}`}>{current.levels.join(" / ")}</span></span>
-                  <span className="meaning-label">{current.word}</span>
+                  {/* <span className="meaning-label">{current.word}</span> */}
                   <span className="meaning-text" lang={activeMeaningLanguage}>
                     {meaningText}
                   </span>
