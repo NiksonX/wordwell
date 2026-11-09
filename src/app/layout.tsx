@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "WordWell | Well learned",
+  title: "Wordwell | Well learned",
   description: "A thoughtful flashcard space for building your English vocabulary.",
 };
 
