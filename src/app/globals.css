@@ -153,6 +153,8 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .card-empty button { border: 0; border-bottom: 1px solid var(--green); padding: 4px 0; background: transparent; color: var(--green); font-size: 0.6875rem; cursor: pointer; }
 .study-controls { display: flex; align-items: center; gap: 15px; margin-top: 26px; }
 .icon-button, .save-button, .speak-button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #dfe3dd; border-radius: 50%; background: #fafaf7; color: #42534a; font-size: 1.1875rem; cursor: pointer; transition: background 150ms ease, transform 150ms ease; }
+/* Arrow and listen buttons use the same rounded-rectangle shape as on phones (matches the Reveal button's corners). */
+.icon-button, .card-speak { width: 64px; height: 48px; flex: 0 0 64px; border-radius: 5px; font-size: 1.5rem; }
 .icon-button:hover, .save-button:hover, .speak-button:hover { transform: translateY(-2px); background: white; }
 .save-button { font-size: 1.3125rem; }
 .reveal-button { min-width: 160px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 11px; padding: 0 18px; border: 0; border-radius: 5px; background: var(--green); color: #fffef7; font-size: 0.875rem; font-weight: 650; cursor: pointer; transition: background 150ms ease, transform 150ms ease; }
