@@ -115,6 +115,11 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 /* Same size and shape as the arrow buttons (.icon-button) at every breakpoint. */
 .card-speak { flex: 0 0 44px; margin-left: 2px; }
 .card-speak:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+/* Ghost style: only the speaker icon shows; the full button area stays tappable.
+   Declared after the shared button rules so it wins at every breakpoint. */
+.card-speak.card-speak { border-color: transparent; background: transparent; color: var(--green); box-shadow: none; }
+.card-speak.card-speak:hover { transform: none; background: rgba(36, 92, 74, .07); }
+.card-speak.card-speak:active { background: rgba(36, 92, 74, .12); }
 .card-face:focus-within { border-color: #cfd8cd; }
 .pronunciation { margin-left: 9px; color: #637067; font-family: var(--font-display); font-size: 1rem; }
 .card-bottomline { margin-top: auto; padding-top: 25px; border-top: 1px solid #e8e9e2; color: #5f6b62; font-size: 0.75rem; font-weight: 500; letter-spacing: 0; }
