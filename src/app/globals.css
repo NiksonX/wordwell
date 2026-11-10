@@ -111,6 +111,11 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .word-note { display: block; margin-top: 8px; color: #637067; font-family: var(--font-body); font-size: 1rem; font-weight: 500; line-height: 1.3; }
 .word-meta { display: flex; align-items: center; gap: 8px; color: #59665d; font-size: 0.8125rem; }
 .word-meta i { width: 5px; height: 5px; border-radius: 50%; background: var(--coral); }
+/* Listen button on the card, right after the IPA: compact, but still a 40px touch target. */
+/* Same size and shape as the arrow buttons (.icon-button) at every breakpoint. */
+.card-speak { flex: 0 0 44px; margin-left: 2px; }
+.card-speak:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.card-face:focus-within { border-color: #cfd8cd; }
 .pronunciation { margin-left: 9px; color: #637067; font-family: var(--font-display); font-size: 1rem; }
 .card-bottomline { margin-top: auto; padding-top: 25px; border-top: 1px solid #e8e9e2; color: #5f6b62; font-size: 0.75rem; font-weight: 500; letter-spacing: 0; }
 .turn-icon { color: var(--green); font-size: 1.25rem; }
@@ -190,9 +195,8 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .meaning-text { font-size: 1.625rem; }
   .example-block { font-size: 1.375rem; }
   .study-controls { width: min(100%, 400px); gap: 8px; }
-  .icon-button, .save-button, .speak-button { width: 48px; height: 48px; flex: 0 0 48px; }
-  .icon-button { width: 64px; flex: 0 0 64px; border-radius: 5px; font-size: 1.5rem; }
-  .speak-button { width: 56px; flex: 0 0 56px; border-radius: 5px; }
+  .icon-button, .save-button, .card-speak { width: 48px; height: 48px; flex: 0 0 48px; }
+  .icon-button, .card-speak { width: 64px; flex: 0 0 64px; border-radius: 5px; font-size: 1.5rem; }
   .reveal-button { min-width: 0; height: 48px; flex: 1; }
   .desktop-hint { display: none; }
   .mobile-hint { display: flex; justify-content: center; font-size: 0.8125rem; }
@@ -210,7 +214,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .example-block { font-size: 1.3125rem; }
   .study-controls { gap: 10px; }
   .reveal-button { min-width: 0; padding: 0 12px; }
-  .icon-button { width: 56px; flex: 0 0 56px; }
+  .icon-button, .card-speak { width: 56px; flex: 0 0 56px; }
   .keyboard-hint { gap: 4px; font-size: 0.5rem; }
   .keyboard-hint b { margin: 0 3px; }
   .page-footer { padding: 0 17px; }
@@ -225,7 +229,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .card-bottomline { padding-top: 18px; }
   .word-display { font-size: 2.5rem; }
   .study-controls { gap: 6px; }
-  .icon-button, .speak-button { width: 44px; flex: 0 0 44px; }
+  .icon-button, .card-speak { width: 44px; flex: 0 0 44px; }
   .reveal-button { padding: 0 6px; white-space: nowrap; }
 }
 @media (min-width: 761px) and (max-height: 850px) {

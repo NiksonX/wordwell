@@ -429,6 +429,8 @@ export default function Home() {
 
   const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
     if (event.target instanceof HTMLInputElement) return;
+    // Space/Enter on a focused button (listen, filters…) should press that button, not flip the card.
+    if (event.target instanceof HTMLButtonElement && (event.code === "Space" || event.key === "Enter")) return;
     if (event.key === "ArrowLeft") {
       event.preventDefault();
       moveCard(-1);
@@ -544,14 +546,16 @@ export default function Home() {
             <div className="card-shadow card-shadow-back" />
             <div className={`flashcard ${flipped ? "is-flipped" : ""}`}>
               {current ? <>
-                <button className="card-face card-front" onClick={() => flipCard(true)} aria-label={`Reveal meaning of ${current.word}`}>
+                <div className="card-face card-front" onClick={() => flipCard(true)} aria-hidden={flipped} inert={flipped}>
                   <span className="card-topline"><span>{current.supplemental ? "SUPPLEMENTAL WORD" : `WORD № ${String(wordNumbers.get(current)).padStart(4, "0")}`}</span><span className={`level-tag level-${current.levels[0].toLowerCase()}`}>{current.levels.join(" / ")}</span></span>
                   <span className="word-display">{headwordParts(current.word).main}{headwordParts(current.word).note && <small className="word-note">{headwordParts(current.word).note}</small>}</span>
-                  <span className="word-meta"><i /> {Array.from(new Set(current.senses.map((sense) => sense.part))).join(", ")} {pronunciation && <span className="pronunciation" title="American pronunciation">{pronunciation}</span>}</span>
+                  <span className="word-meta"><i /> {Array.from(new Set(current.senses.map((sense) => sense.part))).join(", ")} {pronunciation && <span className="pronunciation" title="American pronunciation">{pronunciation}</span>}
+                    {canSpeak && <button type="button" className="speak-button card-speak" onClick={(event) => { event.stopPropagation(); speakCurrent(); }} aria-label={`Hear ${spokenForm(current.word)} in American English`} title="Hear American pronunciation (P)"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11" /></svg></button>}
+                  </span>
                   <span className="card-bottomline"><span>Take a guess, then turn the card</span><span className="turn-icon" aria-hidden="true">↻</span></span>
                   <span className="card-ornament" aria-hidden="true"></span>
-                </button>
-                <button className="card-face card-back" onClick={() => flipCard(false)} aria-label={`Hide meaning of ${current.word}`}>
+                </div>
+                <div className="card-face card-back" onClick={() => flipCard(false)} aria-hidden={!flipped} inert={!flipped}>
                   <span className="card-topline"><span>THE MEANING</span><span className={`level-tag level-${current.levels[0].toLowerCase()}`}>{current.levels.join(" / ")}</span></span>
                   {/* <span className="meaning-label">{current.word}</span> */}
                   <span className="meaning-text" lang={activeMeaningLanguage}>
@@ -561,7 +565,7 @@ export default function Home() {
                     ? <span className="example-block"><span>IN A SENTENCE</span><span className="example-text">“{exampleText}”</span></span>
                     : !examplesLoaded && <span className="example-block is-loading" aria-hidden="true"><span>IN A SENTENCE</span><span className="example-skeleton"><i /><i /></span></span>}
                   <span className="card-bottomline"><span>Turn back to the word</span><span className="turn-icon" aria-hidden="true">↻</span></span>
-                </button>
+                </div>
               </> : <div className="card-empty"><span>✳</span><p>{showSaved ? "Save a word to start your collection." : "No words in this view."}</p><button onClick={() => { setShowSaved(false); setQuery(""); setLevel("All"); setPart("All"); }}>Back to the deck</button></div>}
             </div>
           </div>
@@ -570,7 +574,6 @@ export default function Home() {
             <button className="icon-button" onClick={() => moveCard(-1)} aria-label="Previous word" title="Previous word (left arrow)"><span aria-hidden="true">←</span></button>
             <button className="reveal-button" onClick={() => current && flipCard(!flipped)} disabled={!current}>{flipped ? "Show word" : "Reveal meaning"}<span aria-hidden="true"></span></button>
             <button className="icon-button" onClick={() => moveCard(1)} aria-label="Next word" title="Next word (right arrow)"><span aria-hidden="true">→</span></button>
-            {canSpeak && <button className="speak-button" onClick={speakCurrent} disabled={!current} aria-label={current ? `Hear ${spokenForm(current.word)} in American English` : "Hear the word"} title="Hear American pronunciation (P)"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11" /></svg></button>}
             {/* <button className={`save-button ${current && saved.includes(current.word) ? "is-saved" : ""}`} onClick={() => current && toggleSaved(current.word)} disabled={!current} aria-label={current && saved.includes(current.word) ? "Remove saved word" : "Save word"} title="Save word"><span aria-hidden="true">{current && saved.includes(current.word) ? "★" : "☆"}</span></button> */}
           </div>
 
