@@ -173,7 +173,10 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 @keyframes card-arrive { from { transform: translateY(14px) rotate(.6deg); } to { transform: translateY(0) rotate(0); } }
 
 @media (max-width: 760px) {
-  .topbar { height: 62px; }
+  /* Phones: the page is one long column, so keep the topbar (brand + language switch) pinned while scrolling.
+     Solid background so content scrolling underneath never shows through; z-index keeps it above the 3D card. */
+  .topbar { position: sticky; top: 0; z-index: 50; height: 62px; background: #fafaf6; }
+  html { scroll-padding-top: 62px; }
   .language-toggle { padding: 2px; }
   .language-toggle button { min-width: 44px; height: 44px; }
   .daily-note { display: none; }
