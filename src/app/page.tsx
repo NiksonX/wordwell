@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useDeferredValue, useEffect, useEffectEvent, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } from "react";
 import oxfordWordData from "./american-oxford-3000-words.json";
 import oxfordExtraWordData from "./american-oxford-5000-extra-words.json";
@@ -581,7 +582,7 @@ export default function Home() {
           <div className="keyboard-hint mobile-hint">Swipe to browse <b>·</b> Tap a card to flip</div>
         </section>
       </section>
-      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta">Built for Anastasiia 😎 <i></i>
+      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta"><Link className="changelog-link" href="/changelog">Changelog</Link> <i>·</i> Built for Anastasiia 😎 <i></i>
         {/* <a className="contact-link" href={`mailto:${contactEmail}`} aria-label={`Email ${contactEmail}`} title={contactEmail}>
           <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6.5 8.5-6.5" /></svg>
         </a> */}
