@@ -6,14 +6,15 @@ export const metadata: Metadata = {
   description: "What's new in WordWell.",
 };
 
-type Release = { date: string; label: string; changes: string[] };
+type Release = { date: string; changes: string[] };
 
-// Newest first. Dates are ISO (YYYY-MM-DD); `label` is how the date is shown.
+// Newest first. Write `date` as ISO (YYYY-MM-DD) — the machine-readable form <time> requires;
+// it is displayed as DD/MM/YYYY.
 const releases: Release[] = [
   {
     date: "2026-11-10",
-    label: "November 10, 2026",
     changes: [
+      "New “What’s new” page (this one) listing every update. Find it in the top bar, or in the footer on phones.",
       "The listen button moved onto the card, right next to the pronunciation. Tap it to hear the word without flipping the card.",
       "The listen button is now just the speaker icon, with the same large tap area as the arrow buttons.",
       "The arrow buttons have the same rounded shape on desktop and on phones.",
@@ -24,7 +25,6 @@ const releases: Release[] = [
   },
   {
     date: "2026-11-09",
-    label: "November 9, 2026",
     changes: [
       "A new “w.” icon in the browser tab and on the iPhone home screen.",
       "A more natural pronunciation voice: WordWell now picks the best American English voice your browser offers.",
@@ -32,7 +32,6 @@ const releases: Release[] = [
   },
   {
     date: "2026-11-06",
-    label: "November 6, 2026",
     changes: [
       "5,005 words: the full American Oxford 5000, including the new C1 level, plus everyday American words marked “Supplemental”.",
       "An example sentence for every word, shown under “In a sentence”.",
@@ -44,6 +43,11 @@ const releases: Release[] = [
     ],
   },
 ];
+
+function formatDate(isoDate: string) {
+  const [year, month, day] = isoDate.split("-");
+  return `${day}/${month}/${year}`;
+}
 
 export default function ChangelogPage() {
   return (
@@ -63,7 +67,7 @@ export default function ChangelogPage() {
         <ol className="changelog-list">
           {releases.map((release) => (
             <li className="changelog-release" key={release.date}>
-              <h2><time dateTime={release.date}>{release.label}</time></h2>
+              <h2><time dateTime={release.date}>{formatDate(release.date)}</time></h2>
               <ul>
                 {release.changes.map((change) => <li key={change}>{change}</li>)}
               </ul>

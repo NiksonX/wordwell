@@ -463,6 +463,7 @@ export default function Home() {
         </a>
         <div className="topbar-right">
           <span className="daily-note"><span className="status-dot" /> A good day to learn a word</span>
+          <Link className="source-link whats-new-link" href="/changelog">What&apos;s new</Link>
           <div className="language-toggle" role="group" aria-label="Meaning language">
             {(["en", "uk", "de"] as const).map((language) => (
               <button
@@ -582,7 +583,7 @@ export default function Home() {
           <div className="keyboard-hint mobile-hint">Swipe to browse <b>·</b> Tap a card to flip</div>
         </section>
       </section>
-      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta"><Link className="changelog-link" href="/changelog">Changelog</Link> <i>·</i> Built for Anastasiia 😎 <i></i>
+      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta"><span className="footer-changelog"><Link className="changelog-link" href="/changelog">What&apos;s new</Link> <i>·</i> </span>Built for Anastasiia 😎 <i></i>
         {/* <a className="contact-link" href={`mailto:${contactEmail}`} aria-label={`Email ${contactEmail}`} title={contactEmail}>
           <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6.5 8.5-6.5" /></svg>
         </a> */}

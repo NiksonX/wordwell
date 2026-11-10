@@ -189,6 +189,14 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .changelog-back:hover { text-decoration: underline; }
 .changelog-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .changelog-link:hover { color: var(--green); }
+/* "What's new" sits in the topbar; small phones have no room there, so it falls back to the footer. */
+.whats-new-link { white-space: nowrap; }
+.whats-new-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.footer-changelog { display: none; }
+@media (max-width: 520px) {
+  .whats-new-link { display: none; }
+  .footer-changelog { display: inline; }
+}
 
 /* Motion only: starting at opacity 0 would hide the card text from LCP until the animation ends. */
 @keyframes card-arrive { from { transform: translateY(14px) rotate(.6deg); } to { transform: translateY(0) rotate(0); } }
