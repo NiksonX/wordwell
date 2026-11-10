@@ -40,9 +40,10 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .source-link span { margin-left: 4px; }
 .workspace { flex: 1; width: min(1320px, 100%); margin: 0 auto; padding: 48px clamp(22px, 5vw, 76px) 36px; display: grid; grid-template-columns: minmax(225px, 290px) minmax(0, 1fr); gap: clamp(42px, 8vw, 118px); }
 .deck-sidebar { min-height: 680px; display: flex; flex-direction: column; border-right: 1px solid var(--line); padding-right: 28px; }
-.sidebar-heading { display: flex; align-items: flex-end; justify-content: space-between; margin: 1px 0 24px; }
+.sidebar-heading { display: flex; align-items: flex-end; justify-content: space-between; margin: 6px 0 24px; }
 .eyebrow { margin: 0 0 10px; color: #68756c; font-size: 0.625rem; font-weight: 750; letter-spacing: 1.2px; }
-.sidebar-heading h1 { margin: 0; font-family: var(--font-display); font-size: 1.6875rem; font-weight: 500; }
+/* Same size and line height as the study heading, so "Word garden" and "Small words." share one baseline. */
+.sidebar-heading h1 { margin: 0; font-family: var(--font-display); font-size: 1.75rem; line-height: 1.1; font-weight: 500; }
 .deck-count { color: #68746c; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 .level-filters { display: flex; align-items: center; gap: 5px; margin-bottom: 18px; }
 .level-chip { min-width: 40px; height: 36px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #5f6b62; font-size: 0.75rem; cursor: pointer; transition: background 160ms ease, color 160ms ease; }
@@ -232,6 +233,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .deck-sidebar { min-height: 0; }
   .word-list { max-height: min(280px, calc(100svh - 500px)); }
   .study-heading { margin-top: 0; margin-bottom: 20px; }
+  .sidebar-heading { margin-top: 0; }
   .card-stage { height: clamp(22rem, calc(100svh - 440px), 24.375rem); }
   .study-controls { margin-top: 18px; }
   .keyboard-hint { margin-top: 14px; }
