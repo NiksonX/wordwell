@@ -20,6 +20,7 @@ const releases: Release[] = [
       "The arrow buttons have the same rounded shape on desktop and on phones.",
       "On phones, the top bar stays in place while you scroll, so the language switch is always within reach.",
       "The “Word garden” and “Small words. Big world.” headings now line up exactly.",
+      "The level and part-of-speech filters line up in neat columns, with equal-size buttons.",
       "Better for screen readers and keyboards: the hidden side of the card is no longer read aloud, and Space or Enter presses the focused button.",
     ],
   },

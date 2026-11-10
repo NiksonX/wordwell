@@ -45,11 +45,11 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 /* Same size and line height as the study heading, so "Word garden" and "Small words." share one baseline. */
 .sidebar-heading h1 { margin: 0; font-family: var(--font-display); font-size: 1.75rem; line-height: 1.1; font-weight: 500; }
 .deck-count { color: #68746c; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
-.level-filters { display: flex; align-items: center; gap: 5px; margin-bottom: 18px; }
-.level-chip { min-width: 40px; height: 36px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #5f6b62; font-size: 0.75rem; cursor: pointer; transition: background 160ms ease, color 160ms ease; }
+/* Both chip rows (levels, parts of speech) share one 5-column grid, so the chips line up in columns. */
+.level-filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; gap: 5px; margin-bottom: 18px; }
+.level-chip { min-width: 0; padding: 0 4px; height: 36px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #5f6b62; font-size: 0.75rem; cursor: pointer; transition: background 160ms ease, color 160ms ease; }
 .level-chip.active { color: white; background: var(--green); }
-.part-filters { justify-content: space-between; gap: 2px; margin-top: -10px; }
-.part-filters .level-chip { min-width: 0; padding: 0 7px; }
+.part-filters { margin-top: -10px; }
 .level-chip:not(.active):hover { background: #e8ebe4; color: var(--ink); }
 .search-box { height: 44px; display: flex; align-items: center; gap: 9px; border: 1px solid #d5dbd3; border-radius: 6px; padding: 0 10px; background: #fafaf7; color: #5f6b62; }
 .search-box > span { font-size: 1.25rem; line-height: 1; transform: rotate(-20deg); }
@@ -218,7 +218,7 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .study-heading .eyebrow { font-size: 0.625rem; }
   .study-heading h2 { font-size: 1.875rem; }
   .progress-wrap { min-width: 72px; }
-  .level-chip { min-width: 44px; height: 44px; font-size: 0.8125rem; }
+  .level-chip { height: 44px; font-size: 0.8125rem; }
   .saved-filter { width: 44px; height: 44px; }
   .card-stage { height: clamp(26.5rem, 60svh, 34rem); touch-action: pan-y; }
   .card-topline, .example-block span:first-child, .level-tag, .row-level, .eyebrow, .list-toolbar, .page-footer, .page-footer span:last-child, .language-toggle button { font-size: 0.75rem; }
