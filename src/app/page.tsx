@@ -457,10 +457,21 @@ export default function Home() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a className="brand" href="#home" aria-label="wordWell home">
+        <Link
+          className="brand"
+          href="/"
+          aria-label="WordWell home"
+          // Already home: go all the way to the top (Next only scrolls the page segment into view). Modified clicks (new tab) are left alone.
+          onClick={(event) => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+            event.preventDefault();
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+          }}
+        >
           <span className="brand-mark">w.</span>
           <span>Wordwell</span>
-        </a>
+        </Link>
         <div className="topbar-right">
           <span className="daily-note"><span className="status-dot" /> A good day to learn a word</span>
           <Link className="source-link whats-new-link" href="/changelog">What&apos;s new</Link>
@@ -488,7 +499,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="workspace" id="home">
+      <section className="workspace">
         <aside className="deck-sidebar">
           <div className="sidebar-heading">
             <div>
