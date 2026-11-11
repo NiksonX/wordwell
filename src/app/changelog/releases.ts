@@ -7,6 +7,7 @@ export const releases: Release[] = [
     date: "2026-11-11",
     changes: [
       "The word list’s scrollbar no longer covers the level tags, and the saved-words star now lines up with them.",
+      "Word numbers on the card are shown plainly (Word № 140 instead of Word № 0140).",
     ],
   },
   {
