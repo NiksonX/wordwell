@@ -34,3 +34,8 @@ npx lighthouse http://localhost:3000 --preset=desktop --view   # also run once w
 ```
 
 A localhost run may show a lower simulated mobile LCP than real devices; compare with the deployed site (https://word-well.vercel.app) before treating it as a regression. The one expected local console error is the 404 for `/_vercel/speed-insights/script.js` (it only exists on Vercel).
+
+## References
+
+- **Next.js** (16.4.5): https://nextjs.org/docs — the copy bundled in `node_modules/next/dist/docs/` matches the installed version exactly, so it wins where the two differ (the website tracks the latest release).
+- **React** (19.3): https://react.dev — hooks and APIs used here include `useSyncExternalStore`, `useEffectEvent`, `useDeferredValue`, `memo`, and the React Compiler (`reactCompiler: true` in `next.config.ts`, so manual memoization is rarely needed).
