@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 @AGENTS.md
 @README.md
 
-**Required:** every user-visible change must also be added to the changelog (`src/app/changelog/releases.ts`) — see "Changelog (required)" in AGENTS.md for the format.
+**Required:** every user-visible change must also be added to the changelog (`src/app/changelog/releases.ts`), and Lighthouse must stay at 100 in all four categories — see "Changelog (required)" and "Lighthouse 100 (required)" in AGENTS.md.
 
 ## Verifying changes
 
