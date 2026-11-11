@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 @AGENTS.md
 @README.md
 
-**Required:** every user-visible change must also be added to the changelog (`src/app/changelog/page.tsx`) — see "Changelog (required)" in AGENTS.md for the format.
+**Required:** every user-visible change must also be added to the changelog (`src/app/changelog/releases.ts`) — see "Changelog (required)" in AGENTS.md for the format.
 
 ## Verifying changes
 
@@ -16,6 +16,7 @@ There is no test suite; `npm run build` plus a type check is the baseline. Verif
 - `page.tsx` holds `Home` plus helpers in the same file: data merging, part-of-speech filtering, the virtualized word list (`WordList`, fixed `wordRowHeight = 48`), speech synthesis, keyboard/swipe handling. Saved words live in `localStorage` via `useSyncExternalStore`.
 - `globals.css` is plain CSS with tokens on `:root` (`--green`, `--coral`, `--ink`, `--paper`…); Tailwind is imported but JSX class names are semantic, not utilities. Font sizes are in `rem`.
 - Icons use Next file conventions (`icon.png`, `apple-icon.png`); there is intentionally no `favicon.ico`.
+- `robots.ts` and `sitemap.ts` are generated metadata routes; the production URL lives in `site.ts` (`siteUrl`). The sitemap's `lastModified` is the newest date in `changelog/releases.ts`.
 
 ### Word data internals
 

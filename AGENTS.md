@@ -12,7 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 Every change a WordWell user can notice must be added to the changelog in the same piece of work — don't wait to be asked.
 
-- File: `src/app/changelog/page.tsx`, the `releases` array (newest first). Shown at `/changelog` ("What's new").
+- File: `src/app/changelog/releases.ts`, the `releases` array (newest first). Shown at `/changelog` ("What's new"); the newest date also becomes the sitemap's `lastmod`.
 - Today's date already has an entry → add a bullet to it; otherwise add a new entry at the top with `date: "YYYY-MM-DD"` (ISO; the page displays it as DD/MM/YYYY).
 - Write for learners, not developers: one plain sentence per change, describing what they'll see or can do ("The listen button moved onto the card…"), not how it was implemented. American English.
 - Skip changes users can't notice (refactors, lint fixes, comments, tooling, docs such as this file).

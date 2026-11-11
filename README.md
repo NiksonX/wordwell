@@ -29,7 +29,7 @@ npm run dev      # http://localhost:3000
 
 - `src/app/page.tsx` — the app (a single client component)
 - `src/app/globals.css` — all styles
-- `src/app/changelog/page.tsx` — the "What's new" page
+- `src/app/changelog/` — the "What's new" page; entries are in `releases.ts`
 - `src/app/*.json` — word data (below)
 
 ## Word data
