@@ -568,7 +568,7 @@ export default function Home() {
                     : !examplesLoaded && <span className="example-block is-loading" aria-hidden="true"><span>IN A SENTENCE</span><span className="example-skeleton"><i /><i /></span></span>}
                   <span className="card-bottomline"><span>Turn back to the word</span><span className="turn-icon" aria-hidden="true">↻</span></span>
                 </div>
-              </> : <div className="card-empty"><span>✳</span><p>{showSaved ? "Save a word to start your collection." : "No words in this view."}</p><button onClick={() => { setShowSaved(false); setQuery(""); setLevel("All"); setPart("All"); }}>Back to the deck</button></div>}
+              </> : <div className="card-empty"><span></span><p>{showSaved ? "Save a word to start your collection." : "No words in this view."}</p><button onClick={() => { setShowSaved(false); setQuery(""); setLevel("All"); setPart("All"); }}>Back to the deck</button></div>}
             </div>
           </div>
 

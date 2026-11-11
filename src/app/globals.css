@@ -56,10 +56,13 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
 .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 0.875rem; }
 .search-box input::placeholder { color: #68756c; }
 .search-box kbd, .keyboard-hint kbd { border: 1px solid #d4dbd3; border-radius: 3px; padding: 2px 6px; color: #5f6b62; font-size: 0.625rem; background: #f5f6f2; }
-.list-toolbar { display: flex; justify-content: space-between; align-items: center; margin: 25px 0 8px; color: #68756c; font-size: 0.625rem; font-weight: 750; letter-spacing: 1px; }
+/* Right padding = word-list scrollbar lane (12px) + row padding (10px), so the star sits over the level-tag column. */
+.list-toolbar { display: flex; justify-content: space-between; align-items: center; margin: 25px 0 8px; padding-right: 22px; color: #68756c; font-size: 0.625rem; font-weight: 750; letter-spacing: 1px; }
 .saved-filter { width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: #5f6b62; font-size: 1.25rem; cursor: pointer; }
 .saved-filter.active, .save-button.is-saved { color: #d1883b; }
-.word-list { flex: 1; overflow: auto; max-height: 354px; scrollbar-width: thin; scrollbar-color: #d8ddd5 transparent; }
+/* Overlay scrollbars (macOS, phones) are drawn on top of the rows: keep a lane free on the right so the
+   thumb never covers the level tags. scrollbar-gutter keeps rows from shifting where scrollbars take space. */
+.word-list { flex: 1; overflow: auto; max-height: 354px; padding-right: 12px; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #d8ddd5 transparent; }
 .word-list-spacer { position: relative; }
 .word-list-window { position: absolute; inset: 0 0 auto; }
 .word-row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 48px; overflow: hidden; padding: 0 10px; border: 0; border-bottom: 1px solid #e8eae5; background: transparent; text-align: left; cursor: pointer; transition: background 150ms ease; }
@@ -220,6 +223,8 @@ button:focus-visible, a:focus-visible, .search-box:focus-within { outline: 2px s
   .progress-wrap { min-width: 72px; }
   .level-chip { height: 44px; font-size: 0.8125rem; }
   .saved-filter { width: 44px; height: 44px; }
+  /* The 44px touch target is 12px wider than a tag, so shift it by half of that to keep centers aligned. */
+  .list-toolbar { padding-right: 16px; }
   .card-stage { height: clamp(26.5rem, 60svh, 34rem); touch-action: pan-y; }
   .card-topline, .example-block span:first-child, .level-tag, .row-level, .eyebrow, .list-toolbar, .page-footer, .page-footer span:last-child, .language-toggle button { font-size: 0.75rem; }
   .word-meta, .card-bottomline { font-size: 0.875rem; }
