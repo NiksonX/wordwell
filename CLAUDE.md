@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Verifying changes
 
-There is no test suite; `npm run build` plus a type check is the baseline. Verify UI changes in a real browser at several widths (at least 1306, 390 and 320px) — layouts change at the 760px, 420px and 360px breakpoints and by viewport height (card height uses container queries). `npm run lint` reports one known warning (unused `toggleSaved` — the save button is commented out in the controls).
+There is no test suite; `npm run build` plus a type check is the baseline. Verify UI changes in a real browser at several widths (at least 1306, 390 and 320px) — layouts change at the 760px, 420px and 360px breakpoints and by viewport height (card height uses container queries). `npm run lint` must pass with zero warnings (`--max-warnings=0`); it includes the full `jsx-a11y` recommended set. Intentional exceptions are disabled inline with a `-- reason` (card click shortcuts, the unused `toggleSaved` kept for the commented-out save button).
 
 ## Architecture internals
 

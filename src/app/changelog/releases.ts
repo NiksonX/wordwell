@@ -4,6 +4,14 @@ export type Release = { date: string; changes: string[] };
 // it is displayed as DD/MM/YYYY.
 export const releases: Release[] = [
   {
+    date: "2026-11-12",
+    changes: [
+      "WordWell now picks the most natural voice on every device: “Google US English” in Chrome, Microsoft’s natural voices in Edge, and Apple’s best installed voice in Safari on Mac and iPhone.",
+      "The right voice is used from the very first tap, and if an online voice is unavailable (for example, offline), WordWell switches to the best voice on your device.",
+      "Every update now goes through an automatic accessibility check, which catches problems for people who use screen readers or a keyboard instead of a mouse before they reach you.",
+    ],
+  },
+  {
     date: "2026-11-11",
     changes: [
       "The word list’s scrollbar no longer covers the level tags, and the saved-words star now lines up with them.",

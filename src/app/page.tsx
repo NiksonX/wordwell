@@ -96,30 +96,48 @@ function voiceScore(voice: SpeechSynthesisVoice) {
   const name = voice.name;
   if (noveltyVoices.test(name)) return -1;
   let score = 0;
-  if (/natural|neural|premium|enhanced|siri/i.test(name)) score += 100;
-  if (/^google us english/i.test(name)) score += 80;
-  if (/\b(ava|samantha|allison|susan|zoe|nicky|evan|nathan|aaron|joelle|noelle|tom)\b/i.test(name)) score += 20;
+  // Chrome (desktop, Android): Google's voice always wins when the browser has it.
+  if (/^google us english/i.test(name)) score += 1000;
+  // Edge: Microsoft's neural "Natural" voices. Apple (Safari on Mac/iPhone): downloaded Premium, then Enhanced voices.
+  if (/natural|neural/i.test(name)) score += 300;
+  if (/premium/i.test(name)) score += 250;
+  if (/enhanced|siri/i.test(name)) score += 200;
+  // Among Apple's standard voices, the newer ones sound most natural.
+  const apple = name.match(/\b(ava|zoe|evan|nathan|allison|susan|joelle|noelle|nicky|aaron|tom|samantha)\b/i)?.[1].toLowerCase();
+  const appleRank: Record<string, number> = { ava: 40, zoe: 36, evan: 34, nathan: 32, allison: 30, susan: 28, joelle: 26, noelle: 26, nicky: 24, aaron: 22, tom: 21, samantha: 20 };
+  if (apple) score += appleRank[apple];
   if (!voice.localService) score += 10; // online voices are usually higher quality
   if (voice.default) score += 1;
   return score;
 }
 
-function bestAmericanVoice(voices: SpeechSynthesisVoice[]) {
+function rankedAmericanVoices(voices: SpeechSynthesisVoice[]) {
   return voices
     .filter((voice) => voice.lang.replace("_", "-") === "en-US")
     .map((voice) => ({ voice, score: voiceScore(voice) }))
     .filter(({ score }) => score >= 0)
-    .sort((left, right) => right.score - left.score)[0]?.voice ?? null;
+    .sort((left, right) => right.score - left.score)
+    .map(({ voice }) => voice);
 }
 
-// Browsers fill the voice list asynchronously; wait briefly so the first word isn't spoken by the fallback voice.
+// Browsers fill the voice list asynchronously, and Chrome adds its online "Google" voices only after the local
+// ones — so a non-empty list can still be missing the voice we want. Wait briefly for an online voice, but only
+// once per visit: browsers without online voices (Safari, Firefox) must not pay the delay on every tap.
+let voicesSettled = false;
+
 function loadVoices(synth: SpeechSynthesis) {
-  const voices = synth.getVoices();
-  if (voices.length) return Promise.resolve(voices);
+  const hasOnlineVoice = () => synth.getVoices().some((voice) => !voice.localService);
+  if (voicesSettled || hasOnlineVoice()) return Promise.resolve(synth.getVoices());
   return new Promise<SpeechSynthesisVoice[]>((resolve) => {
-    const done = () => resolve(synth.getVoices());
-    synth.addEventListener("voiceschanged", done, { once: true });
-    setTimeout(done, 600);
+    const finish = () => {
+      voicesSettled = true;
+      synth.removeEventListener("voiceschanged", onChange);
+      clearTimeout(timer);
+      resolve(synth.getVoices());
+    };
+    const onChange = () => { if (hasOnlineVoice()) finish(); };
+    const timer = setTimeout(finish, 700);
+    synth.addEventListener("voiceschanged", onChange);
   });
 }
 
@@ -127,12 +145,21 @@ function speakAmerican(text: string) {
   const synth = window.speechSynthesis;
   synth.cancel();
   void loadVoices(synth).then((voices) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.voice = bestAmericanVoice(voices);
-    // A touch slower than normal speech, so a learner can hear each sound.
-    utterance.rate = 0.88;
-    synth.speak(utterance);
+    const ranked = rankedAmericanVoices(voices);
+    const speakWith = (voice: SpeechSynthesisVoice | null) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.voice = voice;
+      // A touch slower than normal speech, so a learner can hear each sound.
+      utterance.rate = 0.88;
+      // Online voices ("Google US English") need the network: if one fails, say it with the best voice on the device.
+      utterance.addEventListener("error", (event) => {
+        if (event.error === "interrupted" || event.error === "canceled" || !voice || voice.localService) return;
+        speakWith(ranked.find((candidate) => candidate.localService) ?? null);
+      });
+      synth.speak(utterance);
+    };
+    speakWith(ranked[0] ?? null);
   });
 }
 
@@ -344,6 +371,8 @@ export default function Home() {
       interactionEvents.forEach((type) => window.removeEventListener(type, load));
       loadPronunciations().then(setPronunciations, () => {});
       loadExamples().then((loaded) => { setExamples(loaded); setExamplesLoaded(true); }, () => setExamplesLoaded(true));
+      // Ask for the voice list early: Chrome only starts fetching its online voices once someone asks.
+      if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
     };
     interactionEvents.forEach((type) => window.addEventListener(type, load, { once: true, passive: true }));
     // Safari has no requestIdleCallback.
@@ -398,6 +427,8 @@ export default function Home() {
     setIndex((currentIndex) => (currentIndex + direction + deck.length) % deck.length);
   }
 
+  // Used by the save button, which is commented out in the controls for now; keep it for when the button returns.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleSaved(word: string) {
     const next = saved.includes(word)
       ? saved.filter((item) => item !== word)
@@ -554,11 +585,14 @@ export default function Home() {
           </div>
 
           {/* Clicks that miss the card faces (the ledge, or the gap while the card is mid-rotation) still flip it.
-              Keyboard users flip via the card buttons and the reveal button. */}
+              Card clicks are a mouse/touch shortcut only: keyboard users flip with the Reveal button, Space and the
+              arrow keys (window-level handler), so the stage and faces deliberately have no key handlers or role. */}
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- mouse/touch shortcut; see comment above */}
           <div className="card-stage" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleStageClick}>
             <div className="card-shadow card-shadow-back" />
             <div className={`flashcard ${flipped ? "is-flipped" : ""}`}>
               {current ? <>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- mouse/touch shortcut; keyboard flips via Reveal/Space/arrows */}
                 <div className="card-face card-front" onClick={() => flipCard(true)} aria-hidden={flipped} inert={flipped}>
                   <span className="card-topline"><span>{current.supplemental ? "SUPPLEMENTAL WORD" : `WORD № ${wordNumbers.get(current)}`}</span><span className={`level-tag level-${current.levels[0].toLowerCase()}`}>{current.levels.join(" / ")}</span></span>
                   <span className="word-display">{headwordParts(current.word).main}{headwordParts(current.word).note && <small className="word-note">{headwordParts(current.word).note}</small>}</span>
@@ -566,8 +600,9 @@ export default function Home() {
                     {canSpeak && <button type="button" className="speak-button card-speak" onClick={(event) => { event.stopPropagation(); speakCurrent(); }} aria-label={`Hear ${spokenForm(current.word)} in American English`} title="Hear American pronunciation (P)"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" /><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11" /></svg></button>}
                   </span>
                   <span className="card-bottomline"><span>Take a guess, then turn the card</span><span className="turn-icon" aria-hidden="true">↻</span></span>
-                  <span className="card-ornament" aria-hidden="true"></span>
+                  <span className="card-ornament" aria-hidden="true" />
                 </div>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- mouse/touch shortcut; keyboard flips via Reveal/Space/arrows */}
                 <div className="card-face card-back" onClick={() => flipCard(false)} aria-hidden={!flipped} inert={!flipped}>
                   <span className="card-topline"><span>THE MEANING</span><span className={`level-tag level-${current.levels[0].toLowerCase()}`}>{current.levels.join(" / ")}</span></span>
                   {/* <span className="meaning-label">{current.word}</span> */}
@@ -579,13 +614,13 @@ export default function Home() {
                     : !examplesLoaded && <span className="example-block is-loading" aria-hidden="true"><span>IN A SENTENCE</span><span className="example-skeleton"><i /><i /></span></span>}
                   <span className="card-bottomline"><span>Turn back to the word</span><span className="turn-icon" aria-hidden="true">↻</span></span>
                 </div>
-              </> : <div className="card-empty"><span></span><p>{showSaved ? "Save a word to start your collection." : "No words in this view."}</p><button onClick={() => { setShowSaved(false); setQuery(""); setLevel("All"); setPart("All"); }}>Back to the deck</button></div>}
+              </> : <div className="card-empty"><span /><p>{showSaved ? "Save a word to start your collection." : "No words in this view."}</p><button onClick={() => { setShowSaved(false); setQuery(""); setLevel("All"); setPart("All"); }}>Back to the deck</button></div>}
             </div>
           </div>
 
           <div className="study-controls">
             <button className="icon-button" onClick={() => moveCard(-1)} aria-label="Previous word" title="Previous word (left arrow)"><span aria-hidden="true">←</span></button>
-            <button className="reveal-button" onClick={() => current && flipCard(!flipped)} disabled={!current}>{flipped ? "Show word" : "Reveal meaning"}<span aria-hidden="true"></span></button>
+            <button className="reveal-button" onClick={() => current && flipCard(!flipped)} disabled={!current}>{flipped ? "Show word" : "Reveal meaning"}<span aria-hidden="true" /></button>
             <button className="icon-button" onClick={() => moveCard(1)} aria-label="Next word" title="Next word (right arrow)"><span aria-hidden="true">→</span></button>
             {/* <button className={`save-button ${current && saved.includes(current.word) ? "is-saved" : ""}`} onClick={() => current && toggleSaved(current.word)} disabled={!current} aria-label={current && saved.includes(current.word) ? "Remove saved word" : "Save word"} title="Save word"><span aria-hidden="true">{current && saved.includes(current.word) ? "★" : "☆"}</span></button> */}
           </div>
@@ -594,7 +629,7 @@ export default function Home() {
           <div className="keyboard-hint mobile-hint">Swipe to browse <b>·</b> Tap a card to flip</div>
         </section>
       </section>
-      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta"><span className="footer-changelog"><Link className="changelog-link" href="/changelog">What&apos;s new</Link> <i>·</i> </span>Built for Anastasiia 😎 <i></i>
+      <footer className="page-footer"><span>ONE WORD AT A TIME</span><span className="footer-meta"><span className="footer-changelog"><Link className="changelog-link" href="/changelog">What&apos;s new</Link> <i>·</i> </span>Built for Anastasiia 😎 <i />
         {/* <a className="contact-link" href={`mailto:${contactEmail}`} aria-label={`Email ${contactEmail}`} title={contactEmail}>
           <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6.5 8.5-6.5" /></svg>
         </a> */}

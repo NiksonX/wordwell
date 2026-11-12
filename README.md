@@ -22,7 +22,7 @@ npm run dev      # http://localhost:3000
 | `npm run dev` | Development server |
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build (use this, not `dev`, for Lighthouse) |
-| `npm run lint` | ESLint |
+| `npm run lint` | ESLint (fails on any warning) |
 | `npx tsc --noEmit` | Type check |
 
 ## Project layout
