@@ -8,6 +8,7 @@ export const releases: Release[] = [
     changes: [
       "WordWell now picks the most natural voice on every device: “Google US English” in Chrome, Microsoft’s natural voices in Edge, and Apple’s best installed voice in Safari on Mac and iPhone.",
       "The right voice is used from the very first tap, and if an online voice is unavailable (for example, offline), WordWell switches to the best voice on your device.",
+      "WordWell starts faster on phones: the first card appears right away, and the rest of the 5,005 words load in the background.",
       "Every update now goes through an automatic accessibility check, which catches problems for people who use screen readers or a keyboard instead of a mouse before they reach you.",
     ],
   },

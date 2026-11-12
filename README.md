@@ -27,7 +27,9 @@ npm run dev      # http://localhost:3000
 
 ## Project layout
 
-- `src/app/page.tsx` — the app (a single client component)
+- `src/app/page.tsx` — server entry: renders the first card and hands the first words to the app
+- `src/app/home.tsx` — the app (a client component)
+- `src/app/words.ts` — builds the word deck from the JSON files (loaded by the app separately)
 - `src/app/globals.css` — all styles
 - `src/app/changelog/` — the "What's new" page; entries are in `releases.ts`
 - `src/app/*.json` — word data (below)

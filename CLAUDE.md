@@ -13,18 +13,20 @@ There is no test suite; `npm run build` plus a type check is the baseline. Verif
 
 ## Architecture internals
 
-- `page.tsx` holds `Home` plus helpers in the same file: data merging, part-of-speech filtering, the virtualized word list (`WordList`, fixed `wordRowHeight = 48`), speech synthesis, keyboard/swipe handling. Saved words live in `localStorage` via `useSyncExternalStore`.
+- `page.tsx` is a **server component**: it builds the deck from `words.ts` at build time and passes only the first `initialWordCount` (24) words plus `totalWords` to the client, so the first card is in the HTML while the ~95 KB deck stays out of the main client script.
+- `words.ts` holds the word types, `curatedWords`, and the merge/sort of the three word-list JSONs; each `Word` carries its `number` (deck position). The client lazy-loads this module (`loadAllWords`) on idle or first interaction.
+- `home.tsx` (`"use client"`) is the app: filtering (`groupsForPart`, `searchText` caches — no object-identity maps, since server-sent words are different objects), the virtualized word list (`WordList`, fixed `wordRowHeight = 48`, spacer sized by `total`), speech synthesis, keyboard/swipe handling. Until the full deck arrives, the unfiltered count/progress show `totalWords` and browsing counts against it (a position beyond the loaded words shows the last loaded one). Saved words live in `localStorage` via `useSyncExternalStore`.
 - `globals.css` is plain CSS with tokens on `:root` (`--green`, `--coral`, `--ink`, `--paper`…); Tailwind is imported but JSX class names are semantic, not utilities. Font sizes are in `rem`.
 - Icons use Next file conventions (`icon.png`, `apple-icon.png`); there is intentionally no `favicon.ico`.
 - `robots.ts` and `sitemap.ts` are generated metadata routes; the production URL lives in `site.ts` (`siteUrl`). The sitemap's `lastModified` is the newest date in `changelog/releases.ts`.
 
 ### Word data internals
 
-- The three word-list JSONs are in the main bundle; `examples-en.json` and `pronunciations-us.json` are lazy-loaded; `meanings-uk/de.json` load on language switch. Supplemental words are merged with `supplemental: true`.
+- The three word-list JSONs are only imported by `words.ts` (server-rendered first words + a lazy client chunk); `examples-en.json` and `pronunciations-us.json` are lazy-loaded; `meanings-uk/de.json` load on language switch. Supplemental words are merged with `supplemental: true`.
 - Keys are the exact headword string, including list markers: `"bank (money)"`, `"lead1"`, `"a, an"`. A new word needs an entry in every keyed file. `spokenForm()` / `headwordParts()` strip the markers for speech and display.
-- `curatedWords` in `page.tsx` (~20 hand-written entries) override meaning/translations/example inline; their British IPA field is not displayed.
+- `curatedWords` in `words.ts` (~20 hand-written entries) override meaning/translations/example inline; their British IPA field is not displayed.
 - Levels are A1–C1 (`WordLevel`); level tag colors are `.level-a1` … `.level-c1`.
-- Lazy files load on idle **or** on the first pointer/key interaction (effect in `Home`); the back of the card renders a same-size placeholder until `examplesLoaded`, and a language switch keeps the current language until the new file has arrived (`pendingLanguage`). Preserve these — they prevent layout jumps and an "English flash".
+- Lazy files (full deck, examples, IPA) load on idle **or** on the first pointer/key interaction (effect in `Home`); the back of the card renders a same-size placeholder until `examplesLoaded`, and a language switch keeps the current language until the new file has arrived (`pendingLanguage`). Preserve these — they prevent layout jumps and an "English flash".
 - Keep content original: don't import third-party dictionary data (e.g. CMU dict) that would require shipping a license notice.
 
 ## Gotchas
